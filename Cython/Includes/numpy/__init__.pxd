@@ -428,17 +428,17 @@ cdef extern from "numpy/arrayobject.h":
     bint PyArray_ISWRITEABLE(ndarray m)
     bint PyArray_ISALIGNED(ndarray m)
 
-    int PyArray_NDIM(ndarray)
+    int PyArray_NDIM(ndarray) nogil
     bint PyArray_ISONESEGMENT(ndarray)
     bint PyArray_ISFORTRAN(ndarray)
     int PyArray_FORTRANIF(ndarray)
 
-    void* PyArray_DATA(ndarray)
-    char* PyArray_BYTES(ndarray)
-    npy_intp* PyArray_DIMS(ndarray)
-    npy_intp* PyArray_STRIDES(ndarray)
-    npy_intp PyArray_DIM(ndarray, size_t)
-    npy_intp PyArray_STRIDE(ndarray, size_t)
+    void* PyArray_DATA(ndarray) nogil
+    char* PyArray_BYTES(ndarray) nogil
+    npy_intp* PyArray_DIMS(ndarray) nogil
+    npy_intp* PyArray_STRIDES(ndarray) nogil
+    npy_intp PyArray_DIM(ndarray, int) nogil
+    npy_intp PyArray_STRIDE(ndarray, int) nogil
 
     PyObject *PyArray_BASE(ndarray)  # returns borrowed reference!
     PyArray_Descr *PyArray_DESCR(ndarray) # returns borrowed reference to dtype!
