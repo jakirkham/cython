@@ -94,8 +94,6 @@ cdef extern from *:  # Hard-coded utility code hack.
             # requirements, and does not yet fulfill the PEP.
             # In particular strided access is always provided regardless
             # of flags
-            item_count = Py_SIZE(self)
-
             info.suboffsets = NULL
             info.buf = self.data.as_chars
             info.readonly = 0
@@ -103,19 +101,18 @@ cdef extern from *:  # Hard-coded utility code hack.
             info.itemsize = self.ob_descr.itemsize   # e.g. sizeof(float)
             info.len = info.itemsize * item_count
 
-            info.shape = <Py_ssize_t*> PyObject_Malloc(sizeof(Py_ssize_t) + 2)
-            if not info.shape:
-                raise MemoryError()
-            info.shape[0] = item_count      # constant regardless of resizing
+            info.shape = &self.ob_size
             info.strides = &info.itemsize
 
-            info.format = <char*> (info.shape + 1)
+            info.format = <Py_ssize_t*> PyObject_Malloc(2)
+            if not info.format:
+                raise MemoryError()
             info.format[0] = self.ob_descr.typecode
             info.format[1] = 0
             info.obj = self
 
         def __releasebuffer__(self, Py_buffer* info):
-            PyObject_Free(info.shape)
+            PyObject_Free(info.format)
 
     array newarrayobject(PyTypeObject* type, Py_ssize_t size, arraydescr *descr)
 
