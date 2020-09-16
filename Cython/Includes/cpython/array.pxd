@@ -105,15 +105,8 @@ cdef extern from *:  # Hard-coded utility code hack.
             info.shape = &self.ob_size
             info.strides = &info.itemsize
 
-            info.format = <Py_ssize_t*> PyObject_Malloc(2)
-            if not info.format:
-                raise MemoryError()
-            info.format[0] = self.ob_descr.typecode
-            info.format[1] = 0
+            info.format = info.ob_descr.formats
             info.obj = self
-
-        def __releasebuffer__(self, Py_buffer* info):
-            PyObject_Free(info.format)
 
     array newarrayobject(PyTypeObject* type, Py_ssize_t size, arraydescr *descr)
 
